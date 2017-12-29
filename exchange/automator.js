@@ -6,7 +6,7 @@ function run (minutes) {
   setInterval(async () => {
     const prices = await market.prices()
     await market.record(prices)
-    console.log(`recorded price data | ${count}`)
+    console.log(`recorded price data | ${++count}`)
 
   }, time.minutes(minutes))
 }
