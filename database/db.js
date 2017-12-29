@@ -1,6 +1,6 @@
 const knex = require('knex')({
   client: 'mysql2',
-  connection: process.env.DATABASE_URL || require('./connection.json'),
+  connection: process.env.CLEARDB_DATABASE_URL || require('./connection.json'),
   pool: { max: 10, min: 1 }
 })
 
