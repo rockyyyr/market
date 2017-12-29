@@ -4,14 +4,14 @@ const time = require('../util/time')
 
 const table = 'market'
 
-function prices (){
+function prices () {
   return new Promise(async resolve => {
     const prices = await request.get('/api/v1/ticker/allPrices')
     resolve(prices.filter(bySymbol))
   })
 }
 
-async function record (prices){
+async function record (prices) {
   const data = prices
     .filter(bySymbol)
     .map(timestamp)
@@ -19,15 +19,20 @@ async function record (prices){
   return db.batchInsert(table, data)
 }
 
-function history (range){
-  return db.selectRange(table, range)
+function dump (prices) {
+  return db.batchInsert(table, prices)
 }
 
-function bySymbol(price){
+function history (range) {
+  return range ? db.selectRange(table, range)
+    : db.select(table)
+}
+
+function bySymbol (price) {
   return price.symbol.endsWith('BTC')
 }
 
-function timestamp(item){
+function timestamp (item) {
   item.time = time.now()
   return item
 }
@@ -35,5 +40,6 @@ function timestamp(item){
 module.exports = {
   prices,
   record,
-  history
+  history,
+  dump
 }

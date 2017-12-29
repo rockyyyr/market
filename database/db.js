@@ -4,7 +4,7 @@ const knex = require('knex')({
   pool: { max: 10, min: 0 }
 })
 
-function raw(sql){
+function raw (sql) {
   return new Promise(resolve => {
     knex.raw(sql)
       .then(result => resolve(result[0][0]))
@@ -12,7 +12,7 @@ function raw(sql){
   })
 }
 
-function batchInsert (table, data){
+function batchInsert (table, data) {
   return new Promise(resolve => {
     knex.batchInsert(table, data, 3000)
       .then(resolve)
@@ -20,7 +20,7 @@ function batchInsert (table, data){
   })
 }
 
-function insert(table, data){
+function insert (table, data) {
   return new Promise(resolve => {
     knex.insert(data).into(table)
       .then(resolve)
@@ -28,7 +28,7 @@ function insert(table, data){
   })
 }
 
-function select(table){
+function select (table) {
   return new Promise(resolve => {
     knex.select().from(table)
       .then(resolve)
@@ -36,7 +36,7 @@ function select(table){
   })
 }
 
-function selectLast(table, columns){
+function selectLast (table, columns) {
   return new Promise(resolve => {
     knex.select().from(table).orderBy('id', 'desc').limit(1).first()
       .then(resolve)
@@ -44,7 +44,7 @@ function selectLast(table, columns){
   })
 }
 
-function selectRange (table, {start, current}){
+function selectRange (table, { start, current }) {
   return new Promise(resolve => {
     knex.select().from(table).whereBetween('time', [start, current])
       .then(resolve)
@@ -52,7 +52,7 @@ function selectRange (table, {start, current}){
   })
 }
 
-function deleteFrom(table){
+function deleteFrom (table) {
   return new Promise(resolve => {
     knex(table).del()
       .then(resolve)
@@ -60,7 +60,7 @@ function deleteFrom(table){
   })
 }
 
-function resetIncrement(table){
+function resetIncrement (table) {
   return new Promise(resolve => {
     knex.raw(`ALTER TABLE ${table} AUTO_INCREMENT = 1`)
       .then(resolve)
@@ -68,14 +68,17 @@ function resetIncrement(table){
   })
 }
 
-function error (err){
+function error (err) {
   console.log(err.message)
 }
 
-knex.schema.hasTable('market').then(exists => {if (!exists) createTable()})
+knex.schema.hasTable('market').then(exists => {
+  if(!exists) createTable()
+})
+
 // knex.schema.hasTable('pool').then(exists => {if (!exists) createPoolTable()})
 
-function createPoolTable(){
+function createPoolTable () {
   knex.schema.createTable('pool', column => {
     column.increments()
     column.string('symbol')
@@ -90,7 +93,7 @@ function createPoolTable(){
     .catch(error)
 }
 
-function createTable (){
+function createTable () {
   knex.schema.createTableIfNotExists('market', column => {
     column.string('symbol')
     column.string('time')
