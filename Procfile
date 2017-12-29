@@ -1,1 +1,1 @@
-web: ./exchange/automator
+web: node ./exchange/automator
