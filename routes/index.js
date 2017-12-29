@@ -1,6 +1,6 @@
 const router = require('express').Router()
 
-router.get('/', console.log('watching market change...'))
+router.get('/', (req, res) => res.end(`watching market change`))
 
 router.use('/market', require('./market'))
 

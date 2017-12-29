@@ -6,10 +6,10 @@ router.get('/', async (req, res) => {
   res.json(data)
 })
 
-router.post('/dump', async (req,res) => {
-  const data = req.body
-  await market.dump(data)
-  res.end('data dumped')
-})
+// router.post('/dump', async (req,res) => {
+//   const data = req.body
+//   await market.dump(data)
+//   res.end('data dumped')
+// })
 
 module.exports = router
