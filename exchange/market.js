@@ -5,7 +5,10 @@ const time = require('../util/time')
 const table = 'market'
 
 function prices (){
-  return request.get('/api/v1/ticker/allPrices')
+  return new Promise(async resolve => {
+    const prices = await request.get('/api/v1/ticker/allPrices')
+    resolve(prices.filter(bySymbol))
+  })
 }
 
 async function record (prices){
