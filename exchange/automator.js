@@ -4,12 +4,11 @@ const time = require('../util/time')
 function run (minutes) {
   let count = 0
   setInterval(async () => {
-    console.log('fetching price data')
     const prices = await market.prices()
     await market.record(prices)
-    console.log(`${(++count).toString().padStart(8)} | recorded price data`)
+    console.log(`recorded price data | ${count}`)
 
-  }, 5000)
+  }, time.minutes(minutes))
 }
 
 run(5)
