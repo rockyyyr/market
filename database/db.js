@@ -69,7 +69,7 @@ function resetIncrement (table) {
 }
 
 function error (err) {
-  if(err.message !== 'Knex:warning - Connection Error: Error: Connection lost: The server closed the connection.')
+  if(err.message.trim() !== 'Knex:warning - Connection Error: Error: Connection lost: The server closed the connection.')
     console.log(err.message)
 }
 
