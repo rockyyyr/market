@@ -3,12 +3,12 @@ const router = require('express').Router()
 
 router.get('/', (req, res) => {
   const currentPortfolio = portfolio.getPortfolio()
-  res.json(currentPortfolio)
+  res.json(JSON.stringify(currentPortfolio, null, 2))
 })
 
 router.get('/history', (req, res) => {
   const history = portfolio.getHistory()
-  res.json(history)
+  res.json(JSON.stringify(history, null, 2))
 })
 
 router.get('/blacklist', (req, res) => {
@@ -18,7 +18,7 @@ router.get('/blacklist', (req, res) => {
 
 router.get('/account', (req, res) => {
   const account = portfolio.getAccount()
-  res.json(account)
+  res.json(JSON.stringify(account, null, 2))
 })
 
 module.exports = router

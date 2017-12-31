@@ -66,7 +66,10 @@ function newInvestment ({ symbol }) {
   return portfolio.filter(item => item.symbol === symbol).length === 0
 }
 
-function blacklisted ({symbol}){
+/**
+ * @returns true if the parameter symbol is blacklisted, false otherwise
+ */
+function blacklisted ({ symbol }) {
   return blacklist.includes(symbol)
 }
 
@@ -150,7 +153,7 @@ function getAccount () {
 /**
  * Reducer function to sum profits from history
  */
-function profits(total, current){
+function profits (total, current) {
   return total + current.btcprofit
 }
 
