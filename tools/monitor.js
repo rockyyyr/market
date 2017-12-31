@@ -14,7 +14,7 @@ function portfolio () {
       finished(interval)
     }
 
-  }, time.seconds(15))
+  }, time.seconds(30))
 }
 
 function check (portfolio, prices) {

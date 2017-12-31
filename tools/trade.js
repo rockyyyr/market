@@ -12,14 +12,14 @@ log.strategy(strategy)
 
 setInterval(async () => {
   try {
-    const top = await getTop(10)
 
-    const currencies = mapCurrencies(top.data)
+    if(transaction.buyingEnabled()) {
+      const top = await getTop(10)
+      const currencies = mapCurrencies(top.data)
 
-    currencies.forEach(async currency => {
-      const investment = investments.calculate(strategy, currency)
+      currencies.forEach(async currency => {
+        const investment = investments.calculate(strategy, currency)
 
-      if(transaction.buyingEnabled()) {
         try {
           await transaction.buy(investment)
 
@@ -30,14 +30,14 @@ setInterval(async () => {
         } catch(err) {
           console.log(err)
         }
-      }
-    })
+      })
+    }
 
   } catch(err) {
     console.error(err)
   }
 
-}, 2000)
+}, minutes(1))
 
 async function getTop (size) {
   const prices = await market.history(range(now(), lookback))
