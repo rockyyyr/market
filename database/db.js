@@ -1,5 +1,3 @@
-// require('./idleConnection')
-
 const knex = require('knex')({
   client: 'mysql2',
   connection: process.env.CLEARDB_DATABASE_URL || require('./connection.json'),
@@ -104,6 +102,10 @@ function createTable () {
   }).then('market table created')
     .catch(error)
 }
+
+setInterval(() => {
+  selectLast('market')
+}, 30000);
 
 module.exports = {
   raw,
