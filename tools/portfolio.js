@@ -142,7 +142,7 @@ function getAccount () {
     portfolioCost: portfolio.reduce(toTotalPurchaseCost, 0),
     sales: history.length,
     wins: history.filter(winners).length,
-    losses: history.filter(!winners).length,
+    losses: history.filter(losers).length,
     profit: history.reduce(profits, 0)
   }
 }
@@ -166,6 +166,13 @@ function toTotalPurchaseCost (total, current) {
  */
 function winners (investment) {
   return investment.success === true
+}
+
+/**
+ * Filter function to filter history by losing investments
+ */
+function losers (investment) {
+  return investment.success === false
 }
 
 /**
