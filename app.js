@@ -1,54 +1,54 @@
-const { calculate, Strategy, stats, monitor } = require('./tools')
+const { investments, strategies, stats, monitor } = require('./tools')
+const { range, minus, seconds, now } = require('./util/time')
 const { market, transaction } = require('./exchange')
-const { range, minus, seconds } = require('./util/time')
 const log = require('./util/log')
 
-const lookback = 3 //hours
+const lookback = 6 //hours
 
 const fund = 0.01
 const profit = 0.0005
+const strategy = strategies.oneToOne(fund, profit, transaction.fee)
+log.strategy(strategy)
 
 setInterval(async () => {
   try {
-    const top = await getTop(1)
+    const top = await getTop(10)
 
-    const currency = mapCurrency(top.data[0])
-    const strategy = Strategy.oneToOne(fund, profit, transaction.fee)
-    const investment = calculate.investment(strategy, currency)
+    const currencies = mapCurrencies(top.data)
 
-    log.investment(strategy)
-    log.table(investment)
+    currencies.forEach(async currency => {
+      const investment = investments.calculate(strategy, currency)
 
-    if(transaction.buying) {
-      try {
-        const { pool, portfolio } = await transaction.buy(investment)
+      if(transaction.buyingEnabled()) {
+        try {
+          await transaction.buy(investment)
 
-        if(!monitor.running)
-          monitor.portfolio()
+          if(!monitor.running) {
+            monitor.portfolio()
+          }
 
-        console.log(`pool: ${pool}`)
-        console.log(JSON.stringify(portfolio))
-
-      } catch(err) {
-        console.log(err)
+        } catch(err) {
+          console.log(err)
+        }
       }
-    }
+    })
 
   } catch(err) {
     console.error(err)
-    process.exit(0)
   }
 
-}, seconds(2))
+}, 2000)
 
 async function getTop (size) {
-  const prices = await market.history(range(minus(10), lookback))
+  const prices = await market.history(range(now(), lookback))
   return stats.top(size, prices)
 }
 
-function mapCurrency (data) {
-  return {
-    symbol: data.symbol,
-    price: data.currentPrice
-  }
+function mapCurrencies (data) {
+  return data.map(item => {
+    return {
+      symbol: item.symbol,
+      price: item.currentPrice
+    }
+  })
 }

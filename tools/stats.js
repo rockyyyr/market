@@ -1,5 +1,22 @@
-const calculate = require('./calculate')
-
+/**
+ * Get the top best or worst performers based on their change percentage
+ * over some duration of time
+ *
+ * @param size the number of entries to return
+ * @param data the data to parse
+ * @returns {Promise} an array containing results as:
+ *
+ * {
+ *  beginning: // earliest time in range
+ *    current: // latest time in range
+ *    data: [
+ *      symbol: // currency symbol
+ *      change: // change percentage during the selected range of time,
+ *      originalPrice: // price at the earliest time in range
+ *      currentPrice: // price at the latest time in range
+ *    ]
+ * }
+ */
 function top (size, data){
   return new Promise(async (resolve, reject) => {
     if (data.length === 0) {
@@ -19,8 +36,6 @@ function top (size, data){
       current: current,
       data: sorted
     }
-
-    // console.log(result)
     resolve(result)
   })
 }
@@ -35,13 +50,15 @@ function mapChange(beginning, latest){
       if (endpoint) {
         result.push({
           symbol: item.symbol,
-          change: calculate.change(item.price, endpoint.price),
+          change: change(item.price, endpoint.price),
           originalPrice: item.price,
           currentPrice: endpoint.price
         })
       }
 
-      if(++count === beginning.length) resolve(result)
+      if(++count === beginning.length) {
+        resolve(result)
+      }
     })
   })
 }
@@ -50,12 +67,18 @@ function whereTimeEquals(time, data){
   return new Promise(resolve => {
     let result = []
     let count = 0
+
     data.forEach(item => {
       if(item.time === time) {
-        result.push({symbol: item.symbol, price: item.price})
+        result.push({
+          symbol: item.symbol,
+          price: item.price
+        })
       }
 
-      if(++count === data.length) resolve(result)
+      if(++count === data.length) {
+        resolve(result)
+      }
     })
   })
 }
@@ -74,6 +97,11 @@ function byTime(a, b){
   return 0
 }
 
+function change (a, b){
+  return (((b - a) / b) * 100).toFixed(3)
+}
+
 module.exports = {
-  top
+  top,
+  change
 }

@@ -5,16 +5,16 @@ let running = false
 
 function portfolio () {
   const interval = setInterval(async () => {
-    console.log(`monitoring portfolio`)
     const prices = await market.prices()
+    const portfolio = transaction.getPortfolio()
 
-    await check(transaction.portfolio, prices)
+    await check(portfolio, prices)
 
-    if(transaction.portfolio.length === 0) {
+    if(portfolio.length === 0) {
       finished(interval)
     }
 
-  }, time.seconds(20))
+  }, time.seconds(15))
 }
 
 function check (portfolio, prices) {
@@ -23,10 +23,8 @@ function check (portfolio, prices) {
     portfolio.forEach(investment => {
       const currency = get(investment.symbol, prices)
 
-      if(currency.price > investment.target || currency.price < investment.abort) {
-        const { pool, portfolio } = transaction.sell(investment)
-        console.log(`pool: ${pool}`)
-        console.log(`portfolio: ${JSON.stringify(portfolio, null, 2)}`)
+      if(currency.price >= investment.target || currency.price <= investment.abort) {
+        const { pool, portfolio } = transaction.sell(investment, currency.price)
       }
 
       if(++index === portfolio.length) {

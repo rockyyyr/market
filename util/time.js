@@ -4,8 +4,8 @@ function now (){
   return moment().format()
 }
 
-function minus (days) {
-  return moment().subtract(days, 'days').format()
+function minus (amount, timeframe) {
+  return moment().subtract(amount, timeframe).format()
 }
 
 function minutes (minutes){

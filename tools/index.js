@@ -1,4 +1,5 @@
-exports.calculate = require('./calculate')
-exports.strategy = require('./strategy')
-exports.monitor = require('./monitor')
 exports.stats = require('./stats')
+exports.monitor = require('./monitor')
+exports.portfolio = require('./portfolio')
+exports.strategies = require('./strategies')
+exports.investments = require('./investments')

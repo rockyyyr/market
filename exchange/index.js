@@ -1,2 +1,2 @@
 exports.market = require('./market')
-exports.transaction = require('./transaction')
+exports.transaction = require('../tools/portfolio')
