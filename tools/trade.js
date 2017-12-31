@@ -1,5 +1,5 @@
 const { investments, strategies, stats, monitor } = require('./index')
-const { range, minus, seconds, now } = require('../util/time')
+const { range, minus, seconds, minutes, now } = require('../util/time')
 const { market, transaction } = require('../exchange/index')
 const log = require('../util/log')
 
