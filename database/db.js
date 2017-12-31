@@ -38,7 +38,7 @@ function select (table) {
 
 function selectLast (table, columns) {
   return new Promise(resolve => {
-    knex.select().from(table).orderBy('id', 'desc').limit(1).first()
+    knex.select().from(table).limit(1).first()
       .then(resolve)
       .catch(error)
   })
