@@ -1,4 +1,4 @@
-require('./idleConnection')
+// require('./idleConnection')
 
 const knex = require('knex')({
   client: 'mysql2',
