@@ -1,3 +1,5 @@
+require('./idleConnection')
+
 const knex = require('knex')({
   client: 'mysql2',
   connection: process.env.CLEARDB_DATABASE_URL || require('./connection.json'),
