@@ -105,7 +105,7 @@ function createTable () {
 
 setInterval(() => {
   selectLast('market')
-}, 30000);
+}, 10000);
 
 module.exports = {
   raw,
