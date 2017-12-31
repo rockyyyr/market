@@ -1,14 +1,13 @@
+const schedule = require('node-schedule')
 const market = require('./market')
-const time = require('../util/time')
 
-function run (minutes) {
-  let count = 0
-  setInterval(async () => {
-    const prices = await market.prices()
-    await market.record(prices)
-    console.log(`recorded price data | ${++count}`)
+const RUN_MINUTES = '0,5,10,15,20,25,30,35,40,45,50,55'
 
-  }, time.minutes(minutes))
-}
+let count = 0
 
-run(5)
+schedule.scheduleJob(`${RUN_MINUTES} * * * *`, async () => {
+  const prices = await market.prices()
+  await market.record(prices)
+
+  console.log(`recorded price data | ${++count}`)
+})

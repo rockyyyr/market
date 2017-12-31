@@ -1,25 +1,26 @@
 const { investments, strategies, stats, monitor } = require('./index')
-const { range, minus, seconds, minutes, now } = require('../util/time')
 const { market, transaction } = require('../exchange/index')
+const { range, minutes, now } = require('../util/time')
 const log = require('../util/log')
 
-const lookback = 6 //hours
+const LOOKBACK = 6 //hours
 
 const fund = 0.01
 const profit = 0.0005
 const strategy = strategies.oneToOne(fund, profit, transaction.fee)
+
 log.strategy(strategy)
 
 setInterval(async () => {
   try {
+    const top = await getTop(10)
 
-    if(transaction.buyingEnabled()) {
-      const top = await getTop(10)
-      const currencies = mapCurrencies(top.data)
+    const currencies = mapCurrencies(top.data)
 
-      currencies.forEach(async currency => {
-        const investment = investments.calculate(strategy, currency)
+    currencies.forEach(async currency => {
+      const investment = investments.calculate(strategy, currency)
 
+      if(transaction.buyingEnabled()) {
         try {
           await transaction.buy(investment)
 
@@ -30,8 +31,8 @@ setInterval(async () => {
         } catch(err) {
           console.log(err)
         }
-      })
-    }
+      }
+    })
 
   } catch(err) {
     console.error(err)
@@ -40,7 +41,7 @@ setInterval(async () => {
 }, minutes(1))
 
 async function getTop (size) {
-  const prices = await market.history(range(now(), lookback))
+  const prices = await market.history(range(now(), LOOKBACK))
   return stats.top(size, prices)
 }
 
