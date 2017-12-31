@@ -1,10 +1,10 @@
 const request = require('../util/request')
 const { log } = require('../util/index')
 
-const portfolioMax = 5
-const initialInvestment = 0.01
+const PORTFOLIO_MAX_SIZE = 5
+const INITIAL_INVESTMENT = 0.1
 
-let pool = initialInvestment
+let pool = INITIAL_INVESTMENT
 let portfolio = []
 let history = []
 let blacklist = []
@@ -78,7 +78,7 @@ function blacklisted ({symbol}){
 function addInvestment (investment) {
   portfolio.push(investment)
 
-  if(portfolio.length === portfolioMax) {
+  if(portfolio.length === PORTFOLIO_MAX_SIZE) {
     buying = false
   }
 }
@@ -105,7 +105,7 @@ function addToHistory (investment, price) {
  */
 function removeInvestment (symbol) {
   portfolio = portfolio.filter(item => item.symbol !== symbol)
-  blacklist.push(symbol)
+  // blacklist.push(symbol) //
   buying = true
 }
 
@@ -130,11 +130,14 @@ function getHistory () {
   return history
 }
 
+/**
+ * @returns {Object} up to date account break down
+ */
 function getAccount () {
   return {
     pool,
-    investment: initialInvestment,
-    portfolioMax,
+    investment: INITIAL_INVESTMENT,
+    portfolioMax: PORTFOLIO_MAX_SIZE,
     portfolioSize: portfolio.length,
     portfolioCost: portfolio.reduce(toTotalPurchaseCost, 0),
     sales: history.length,
@@ -144,14 +147,23 @@ function getAccount () {
   }
 }
 
+/**
+ * Reducer function to sum profits from history
+ */
 function profits(total, current){
   return total + current.btcprofit
 }
 
+/**
+ * Reducer function to sum total purchase cost of investments in the portfolio
+ */
 function toTotalPurchaseCost (total, current) {
   return total + (current.price * current.amount)
 }
 
+/**
+ * Filter function to filter history by successful investments
+ */
 function winners (investment) {
   return investment.success === true
 }

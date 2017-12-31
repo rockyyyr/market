@@ -1,7 +1,7 @@
-const { investments, strategies, stats, monitor } = require('./tools')
-const { range, minus, seconds, now } = require('./util/time')
-const { market, transaction } = require('./exchange')
-const log = require('./util/log')
+const { investments, strategies, stats, monitor } = require('./index')
+const { range, minus, seconds, now } = require('../util/time')
+const { market, transaction } = require('../exchange/index')
+const log = require('../util/log')
 
 const lookback = 6 //hours
 
