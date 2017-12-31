@@ -71,8 +71,7 @@ function resetIncrement (table) {
 }
 
 function error (err) {
-  if(err.message.trim() !== 'Knex:warning - Connection Error: Error: Connection lost: The server closed the connection.')
-    console.log('error: ' + err.message)
+  console.log(err.message)
 }
 
 knex.schema.hasTable('market').then(exists => {
