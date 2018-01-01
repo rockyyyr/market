@@ -23,10 +23,18 @@ function range (current, lookback){
   }
 }
 
+function rangeUnix(current, lookback){
+  return {
+    start: moment(current).subtract(lookback + 3, 'hours').unix(),
+    current: moment(current).unix()
+  }
+}
+
 module.exports = {
   now,
   minus,
   minutes,
   seconds,
-  range
+  range,
+  rangeUnix
 }

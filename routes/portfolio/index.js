@@ -1,4 +1,4 @@
-const { portfolio } = require('../../tools')
+const { portfolio } = require('../../trading')
 const router = require('express').Router()
 
 router.get('/', (req, res) => {

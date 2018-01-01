@@ -97,8 +97,8 @@ function byTime(a, b){
   return 0
 }
 
-function change (a, b){
-  return (((b - a) / b) * 100).toFixed(3)
+function change (current, original){
+  return (((original - current) / original) * 100).toFixed(3)
 }
 
 module.exports = {
