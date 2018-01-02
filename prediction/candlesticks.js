@@ -1,17 +1,17 @@
 const { market } = require('../exchange')
-const { now, minus, rangeUnix } = require('../util/time')
+const { now, minus, range } = require('../util/time')
 const stats = require('../trading/stats')
 
-function analyze (hours) {
+function analyze (size, prices) {
   return new Promise(async resolve => {
-    const prices = await market.history(rangeUnix(minus(hours, 'hours'), 4))
+    // const prices = await market.history(range(minus(hours, 'hours'), 4))
     const keys = [... new Set(prices.map(item => item.symbol))]
 
     const data = keys
       .map(symbol => toStats(symbol, prices))
-      // .filter(peaks)
+      .filter(peaks)
       .sort(diff)
-      // .slice(0, 5)
+      .slice(0, size)
 
     // console.log(JSON.stringify(data, null, 2))
 
@@ -19,7 +19,7 @@ function analyze (hours) {
   })
 }
 
-function toStats(symbol, prices){
+function toStats (symbol, prices) {
   const currencies = prices.filter(curr => curr.symbol === symbol).sort(byUnixTime)
   const { open, close } = openClose(currencies)
   const change = parseFloat(close - open).toFixed(8)
@@ -52,11 +52,11 @@ function toStats(symbol, prices){
   return { symbol, time, high, low, open, close, change, changePercent, highdiff, lowdiff, body }
 }
 
-function peaks({highdiff, lowdiff, body}){
+function peaks ({ highdiff, lowdiff, body }) {
   return highdiff > body || lowdiff > body
 }
 
-function diff (a, b){
+function diff (a, b) {
   return (b.lowdiff > b.highdiff ? b.lowdiff : b.highdiff) - (a.lowdiff > a.highdiff ? a.lowdiff : a.highdiff)
 }
 
@@ -68,7 +68,7 @@ function byChange (a, b) {
   return a.change - b.change
 }
 
-function byUnixTime(a, b){
+function byUnixTime (a, b) {
   return b.time - a.time
 }
 

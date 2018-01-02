@@ -25,7 +25,11 @@ function dump (prices) {
 
 function history (range) {
   return range ? db.selectRange(table, range)
-    : db.select(table)
+               : db.select(table)
+}
+
+function atTime(currentTime, symbol){
+  return db.selectRecent(table, {start: time.minus(1, 'hours', currentTime), current: currentTime}, symbol)
 }
 
 function bySymbol (price) {
@@ -41,5 +45,6 @@ module.exports = {
   prices,
   record,
   history,
+  atTime,
   dump
 }

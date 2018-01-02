@@ -1,3 +1,3 @@
 require('./server')
-require('./trading/trade')
+require('./trading/trader')
 require('./exchange/automator')

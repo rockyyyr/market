@@ -5,10 +5,11 @@ const moment = require('moment')
 async function run () {
   try {
     const response = await axios.get('https://market-change.herokuapp.com/market')
-    await market.dump(response.data.map(item => {
-      item.time = moment(item.time).unix()
-      return item
-    }))
+    // await market.dump(response.data.map(item => {
+    //   item.time = moment(item.time).unix()
+    //   return item
+    // }))
+    await market.dump(response.data)
     console.log('complete')
     process.exit(0)
 

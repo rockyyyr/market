@@ -44,6 +44,14 @@ function selectLast (table, columns) {
   })
 }
 
+function selectRecent(table, {start, current}, symbol){
+  return new Promise(resolve => {
+    knex.select().from(table).where('symbol', symbol).whereBetween('time', [start, current]).orderBy('time', 'desc').limit(1)
+      .then(resolve)
+      .catch(error)
+  })
+}
+
 function selectRange (table, { start, current }) {
   return new Promise(resolve => {
     knex.select().from(table).whereBetween('time', [start, current])
@@ -114,6 +122,7 @@ module.exports = {
   select,
   selectRange,
   selectLast,
+  selectRecent,
   deleteFrom,
   resetIncrement
 }

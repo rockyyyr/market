@@ -1,9 +1,9 @@
 const Table = require('cli-table2')
 const color = require('chalk')
 
-function strategy ({ fund, target, abort, fee, limit }){
-  const table = new Table({ head: [ 'fund', 'target', 'abort', 'fee', 'limit/profit', 'limit/loss' ] })
-  table.push([ fund, target, abort, fee, limit.profit, limit.loss ])
+function strategy ({ fund, target, abort, limit }){
+  const table = new Table({ head: [ 'fund', 'target', 'abort', 'limit/profit', 'limit/loss' ] })
+  table.push([ fund, target, abort, limit.profit, limit.loss ])
   console.log(table.toString())
 }
 

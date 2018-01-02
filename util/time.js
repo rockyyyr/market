@@ -4,6 +4,10 @@ function now (){
   return moment().format()
 }
 
+function add(amount, timeframe, time = now()){
+  return moment(time).add(amount, timeframe).format()
+}
+
 function minus (amount, timeframe) {
   return moment().subtract(amount, timeframe).format()
 }
@@ -32,6 +36,7 @@ function rangeUnix(current, lookback){
 
 module.exports = {
   now,
+  add,
   minus,
   minutes,
   seconds,

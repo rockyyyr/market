@@ -26,7 +26,7 @@ async function map(){
   }
 }
 
-map()
+// map()
 
 module.exports = {
   map

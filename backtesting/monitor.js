@@ -1,30 +1,24 @@
-const portfolio = require('./portfolio')
+const { portfolio } = require('../trading')
 const { market } = require('../exchange')
 const { time } = require('../util')
 
 let running = false
 
-function investments () {
-  running = true
-
-  const interval = setInterval(async () => {
-    const prices = await market.prices()
+async function investments (time) {
     const investments = portfolio.getPortfolio()
 
-    await check(investments, prices)
+    await check(investments, time)
 
     if(investments.length === 0) {
       finished(interval)
     }
-
-  }, time.seconds(30))
 }
 
-function check (investments, prices) {
+function check (investments, time) {
   return new Promise(resolve => {
     let index = 0
-    investments.forEach(investment => {
-      const currency = get(investment.symbol, prices)
+    investments.forEach(async investment => {
+      const currency = await market.atTime(time, investment.symbol)
 
       if(currency.price >= investment.target || currency.price <= investment.abort) {
         portfolio.sell(investment, currency.price)
