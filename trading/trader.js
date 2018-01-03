@@ -5,9 +5,11 @@ const candlesticks = require('../prediction/candlesticks')
 
 async function trade (strategy, lookback) {
   try {
-    const top = await getTop(10, lookback)
-    const currencies = mapCurrencies(top.data)
+    // const top = await getTop(10, lookback)
+    // const currencies = mapCurrencies(top.data)
 
+    const data = await candlestick(5, lookback)
+    const currencies = mapCurrencies(data)
     // console.log(currencies)
 
     currencies.forEach(async currency => {
@@ -30,6 +32,16 @@ async function trade (strategy, lookback) {
   } catch(err) {
     console.error(err)
   }
+}
+
+async function candlestick (size, lookback) {
+  const data = await market.history(range(now(), lookback))
+  const top = await stats.top(100, data)
+  // console.log(JSON.stringify(top.data, null, 2))
+  const filtered = top.data.filter(item => item.change < -5).map(item => item.symbol)
+  const result = data.filter(item => filtered.includes(item.symbol))
+  // console.log(JSON.stringify(result, null, 2))
+  return candlesticks.analyze(size, result)
 }
 
 async function getTop (size, lookback) {
