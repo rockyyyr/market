@@ -8,4 +8,4 @@ const lookback = 12
 const strategy = strategies.oneToOne(fund, profit)
 log.strategy(strategy)
 
-setInterval(() => trader.trade(strategy, lookback), time.seconds(1))
+setInterval(() => trader.trade(strategy, lookback), time.minutes(1))
