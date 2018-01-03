@@ -1,3 +1,5 @@
+const { market } = require('../exchange')
+
 /**
  * Get the top best or worst performers based on their change percentage
  * over some duration of time
@@ -17,18 +19,22 @@
  *    ]
  * }
  */
-function top (size, data){
+function top (size, data) {
   return new Promise(async (resolve, reject) => {
-    if (data.length === 0) {
+    if(data.length === 0) {
       reject(`error: no data is present`)
     }
 
     const blocks = [... new Set(data.sort(byTime).map(item => item.time))]
     const beginning = blocks[0], current = blocks[blocks.length - 1]
 
+    const currentPrices = await market.prices()
+
     const mapped = await mapChange(
       await whereTimeEquals(beginning, data),
-      await whereTimeEquals(current, data))
+      await whereTimeEquals(current, data)
+      , currentPrices
+    )
 
     const sorted = mapped.sort(byWorst).slice(0, size)
     const result = {
@@ -40,19 +46,19 @@ function top (size, data){
   })
 }
 
-function mapChange(beginning, latest){
+function mapChange (beginning, latest, currentPrices) {
   return new Promise(resolve => {
     let result = []
     let count = 0
-    beginning.forEach(item => {
+    beginning.forEach(async item => {
       const endpoint = latest.filter(elem => elem.symbol === item.symbol)[0]
 
-      if (endpoint) {
+      if(endpoint) {
         result.push({
           symbol: item.symbol,
           change: change(item.price, endpoint.price),
           originalPrice: item.price,
-          currentPrice: endpoint.price
+          currentPrice: currentPrices.filter(elem => elem.symbol === item.symbol)[0].price
         })
       }
 
@@ -63,7 +69,7 @@ function mapChange(beginning, latest){
   })
 }
 
-function whereTimeEquals(time, data){
+function whereTimeEquals (time, data) {
   return new Promise(resolve => {
     let result = []
     let count = 0
@@ -83,21 +89,21 @@ function whereTimeEquals(time, data){
   })
 }
 
-function byBest(a, b){
+function byBest (a, b) {
   return b.change - a.change
 }
 
-function byWorst(a, b){
+function byWorst (a, b) {
   return a.change - b.change
 }
 
-function byTime(a, b){
-  if (a.time > b.time) return 1
-  if (a.time < b.time) return -1
+function byTime (a, b) {
+  if(a.time > b.time) return 1
+  if(a.time < b.time) return -1
   return 0
 }
 
-function change (current, original){
+function change (current, original) {
   return (((original - current) / original) * 100).toFixed(3)
 }
 
