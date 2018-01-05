@@ -34,10 +34,6 @@ function check (investments, prices) {
         portfolio.hold(investment)
       }
 
-      // if(currency.price >= investment.target || currency.price <= investment.abort) {
-      //   portfolio.sell(investment, currency.price)
-      // }
-
       if(++index === investments.length) {
         resolve()
       }
