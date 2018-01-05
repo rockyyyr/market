@@ -57,6 +57,23 @@ function sell (investment, price) {
 }
 
 /**
+ * Hold on to an investment when the target price is reached.
+ * New target and abort values are set. Abort value is set to the original target value
+ * and the target value is set to target plus increase.
+ *
+ * @param investment the investment to hold
+ */
+function hold (investment) {
+  portfolio.forEach(elem => {
+    if(elem.symbol === investment.symbol) {
+      elem.abort = elem.target - (elem.target * 0.1)
+      elem.target += investment.increase
+      elem.holding = true
+    }
+  })
+}
+
+/**
  * Determines if an investment already exists for a currency
  *
  * @param symbol the currency symbol to check
@@ -93,9 +110,15 @@ function addInvestment (investment) {
  * @param price      the price the investment was sold at
  */
 function addToHistory (investment, price) {
+
+  if(investment.holding){
+    investment.success = true
+  } else {
+    investment.success = price > investment.price
+  }
+
   investment.saleprice = price
   investment.btcprofit = (price * investment.amount) - (investment.price * investment.amount)
-  investment.success = price > investment.price
 
   log.sell(investment)
   history.push(investment)
@@ -194,6 +217,7 @@ function getBlacklist () {
 module.exports = {
   buy, sell,
   fee, buying,
+  hold,
   buyingEnabled,
   getPortfolio,
   getHistory,

@@ -26,9 +26,17 @@ function check (investments, prices) {
     investments.forEach(investment => {
       const currency = get(investment.symbol, prices)
 
-      if(currency.price >= investment.target || currency.price <= investment.abort) {
+      if(currency.price <= investment.abort) {
         portfolio.sell(investment, currency.price)
       }
+
+      if(currency.price >= investment.target){
+        portfolio.hold(investment)
+      }
+
+      // if(currency.price >= investment.target || currency.price <= investment.abort) {
+      //   portfolio.sell(investment, currency.price)
+      // }
 
       if(++index === investments.length) {
         resolve()
